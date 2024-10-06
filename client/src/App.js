@@ -1,12 +1,20 @@
 import React from 'react';
-import AvatarEditor from './components/AvatarEditor';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Home from './pages/Home';
+import VideoPage from './pages/VideoPage';
+import Header from './components/Header';
+import Footer from './components/Footer';
 
 function App() {
   return (
-    <div>
-      <h1>RepVid Avatar Customization</h1>
-      <AvatarEditor />
-    </div>
+    <Router>
+      <Header />
+      <Switch>
+        <Route path="/" exact component={Home} />
+        <Route path="/video/:id" component={VideoPage} />
+      </Switch>
+      <Footer />
+    </Router>
   );
 }
 

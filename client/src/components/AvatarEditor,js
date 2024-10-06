@@ -1,43 +1,69 @@
 import React, { useEffect } from 'react';
 import * as THREE from 'three';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
+import './AvatarEditor.css';
 
 const AvatarEditor = () => {
   useEffect(() => {
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth / 2, window.innerHeight);
 
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
-
-    const geometry = new THREE.BoxGeometry();
-    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-    const cube = new THREE.Mesh(geometry, material);
-    scene.add(cube);
-
-    camera.position.z = 5;
+    const avatarContainer = document.getElementById('avatar-preview');
+    avatarContainer.appendChild(renderer.domElement);
 
     const loader = new OBJLoader();
-    loader.load('/path-to-hat-model.obj', (object) => {
+    loader.load('/models/roblox-avatar.obj', (object) => {
+      object.scale.set(2, 2, 2);
       scene.add(object);
     });
 
+    camera.position.z = 5;
+
     const animate = function () {
       requestAnimationFrame(animate);
-      cube.rotation.x += 0.01;
-      cube.rotation.y += 0.01;
       renderer.render(scene, camera);
     };
-
     animate();
 
     return () => {
-      document.body.removeChild(renderer.domElement);
+      avatarContainer.removeChild(renderer.domElement);
     };
   }, []);
 
-  return <div id="avatar-editor"></div>;
+  return (
+    <div className="editor-container">
+      <div className="left-panel">
+        <div className="tabs">
+          <button className="tab active">Hats</button>
+          <button className="tab">Shirts</button>
+          <button className="tab">Pants</button>
+          <button className="tab">T-Shirts</button>
+          <button className="tab">Faces</button>
+        </div>
+        <div className="item-list">
+          <div className="item">
+            <img src="/assets/hat1.png" alt="Hat 1" />
+            <p>cap</p>
+          </div>
+          <div className="item">
+            <img src="/assets/hat2.png" alt="Bunny Ears" />
+            <p>bunny ears</p>
+          </div>
+          <div className="item">
+            <img src="/assets/hat3.png" alt="Golden Hair" />
+            <p>golden hair</p>
+          </div>
+          <div className="item">
+            <img src="/assets/hat4.png" alt="Ushanka Brown" />
+            <p>ushanka brown</p>
+          </div>
+        </div>
+      </div>
+      <div id="avatar-preview" className="right-panel"></div>
+    </div>
+  );
 };
 
 export default AvatarEditor;
